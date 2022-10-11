@@ -5,18 +5,18 @@ export const todosSlice = createSlice({
     initialState: {
         todos: [
             {
-                id: 1,
-                title: 'Tarea inicial',
+                id: new Date().getTime(),
+                title: 'Tarea 1',
                 done: false,
             },
             {
-                id: 2,
-                title: 'Tarea inicial2',
+                id: new Date().getTime() * 2,
+                title: 'Tarea 2',
                 done: false,
             },
             {
-                id: 3,
-                title: 'Tarea inicial3',
+                id: new Date().getTime() * 3,
+                title: 'Tarea 3',
                 done: false,
             },
         ],
@@ -28,7 +28,12 @@ export const todosSlice = createSlice({
     },
     reducers: {
         addTask: (state, action) => {
-            state.todos.push(action.payload);
+            const todo = {
+                id: new Date().getTime(),
+                title: action.payload,
+                done: false,
+            };
+            state.todos.push(todo);
         },
         deleteTask: (state, action) => {
             state.todos = state.todos.filter(
@@ -52,19 +57,24 @@ export const todosSlice = createSlice({
             state.form.idInput = action.payload;
         },
         toggleFormEditMode: (state, action) => {
-            state.form.editMode = action.payload;
+            state.form.editMode = action.payload.newState;
+
+            if (!action.payload.newState) {
+                state.form.titleInput = '';
+                state.form.idInput = '';
+            } else {
+                state.form.titleInput = action.payload.todo.title;
+                state.form.idInput = action.payload.todo.id;
+            }
         },
     },
 });
 
-// Action creators are generated for each case reducer function
 export const {
     deleteTask,
     toggleTask,
     addTask,
     editTitle,
-    todosCount,
-    pendingTodosCount,
     changeFormTitleInput,
     changeFormIdInput,
     toggleFormEditMode,
